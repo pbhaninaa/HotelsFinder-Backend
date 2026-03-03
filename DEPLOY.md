@@ -6,22 +6,19 @@
 2. **Deploy from GitHub repo** → select **pbhaninaa/HotelsFinder-Backend**.
 3. Click **+ New** → **Database** → **Add MySQL**. Wait for it to provision.
 
-## 2. Connect backend to MySQL
+## 2. Link MySQL to the Backend (required)
 
-1. Open the **MySQL** service → **Variables** or **Connect**. Note:
-   - **Host**, **Port** (usually 3306), **Database** (e.g. `railway`), **User**, **Password**.
-2. Build the JDBC URL:  
-   `jdbc:mysql://HOST:PORT/railway?useSSL=true&allowPublicKeyRetrieval=true`
-3. Open your **Backend** service (the one from GitHub). Go to **Variables** and add:
+The backend must use Railway’s **reference** so it gets the private MySQL host (connection refused usually means this step was skipped).
 
-| Variable | Value |
-|----------|--------|
-| `SPRING_PROFILES_ACTIVE` | `railway` |
-| `SPRING_DATASOURCE_URL` | `jdbc:mysql://HOST:PORT/railway?useSSL=true&allowPublicKeyRetrieval=true` |
-| `SPRING_DATASOURCE_USERNAME` | MySQL user |
-| `SPRING_DATASOURCE_PASSWORD` | MySQL password |
+1. Open your **Backend** service (the one from GitHub).
+2. Go to **Variables** → **New Variable** → **Add Reference** (or **Reference**).
+3. Select your **MySQL** service. Railway will add references that inject `MYSQLHOST`, `MYSQLPORT`, `MYSQLUSER`, `MYSQLPASSWORD`, `MYSQLDATABASE` into the backend.
+4. Add one more variable by hand:
+   - **Variable**: `SPRING_PROFILES_ACTIVE`
+   - **Value**: `railway`
+5. **Settings** → **Root Directory**: leave **empty** (repo root is the backend).
 
-4. **Settings** → **Root Directory**: leave **empty** (repo root is the backend).
+Do **not** set `SPRING_DATASOURCE_URL` manually; the app uses `MYSQLHOST`, `MYSQLPORT`, etc. from the reference.
 
 ## 3. Generate public URL
 
